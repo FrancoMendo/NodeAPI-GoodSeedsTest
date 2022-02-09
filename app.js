@@ -1,15 +1,9 @@
-const http = require('http');
+const express = require('express');
+const app = express();
+// Middleware
+app.use(express.json()); 
+// Routes
+require('./routes')(app);
 
-const server =  http.createServer((req, res) => {
-  if (req.url === '/') {
-    res.write('Hello world');
-    res.end();
-  }
-});
-
-/* server.on('connection', (socket) => {
-  console.log('New connection...')
-}); */
-
-server.listen(3000);
-console.log("Listening on port 3000...")
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Listening on port ${port}...`))
