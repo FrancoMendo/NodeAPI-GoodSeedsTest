@@ -17,231 +17,60 @@ module.exports = function(app){
     });
   });
   // user pull changes, send changes
-  app.get("/sync", (req, res) => {
+  app.get("/sync/:from/:to", (req, res) => {
     console.log("In get (pull changes)")
     //console.log("pull timestamp:", req.timestamp)
-    // console.log(`req.body`, req.body)
-   /*  plotlocationapp: {
-      created: [
-        {
-          Id: 1,
-          Active__c: true,
-          City: "Gibson City",
-          City_Id: 1,
-          Company__c: 1,
-          Company__c_Name: "GDM",
-          Country__c: "USA",
-          Crop__Name__c: "Soybean",
-          Crop__c: 1,
-          GeoLocation__Latitude__s: 40.4656,
-          GeoLocation__Longitude__s: -88.3747,
-          Irrigation__c: "0",
-          Location__c_State: "IL",
-          Map_Image__c: null,
-          Maturity_Range__c: "1.3-3.7",
-          Name: "Gibson City Xflex",
-          Plant_Date__c: "01-03-2021",
-          Planting_Date_Range__c: "EARLY",
-          Previous_crop__c: "CORN",
-          QR_Range__c: null,
-          Region__c: "MID",
-          Season__c: "2021",
-          Soil_Type__c: "Sandy Loan",
-          Spacing_Rows__c: "30''",
-          State: "IL",
-          Traits__c: "Xtend, Xflex, Enlist",
-          Yield_Environment__c: "HIGH",
-        }
-      ],
-      updated: [
-        { id: '2', Name: 'Test change name location', Active__c: false },
-      ],
-      deleted: ["ddd"], // listId de los registros que se borraron
-    }, */
-    const changes = {
-      varietyapp: {
-        created: [
-          {
-            id: "99999999",
-            Active: 1,
-            Brand: 'brandTest',
-            Name: 'GDMTestVar',
-            Company_Id: '1',
-            Tecnology:'test',
-          },
-        ],
-        updated: [],
-        deleted: [],
-      },
-      /* noteapp: {
-        created: [
-          {
-            id: '1',
-            Active: 1,
-            Note: null,
-            CreatedDate: "4/22/2021 11:51:52 PM",
-            SiteUser_Id: "3",
-            FieldMap_Id: "1",
-          },
-        ],
-        updated: [],
-        deleted: [],
-      },
-      fieldmapapp: {
-        created: [
-          {
-            id: "1",
-            QRCode: "123",
-            Range: "1",
-            Row: "1",
-            Sequence: 1,
-            PlotLocation_Id: "1",
-            Variety_Id: "1",
-            Rep: 1,
-            Active: 1,
-            Test: "...",
-            CreatedDate: "1/27/2022 15:51:52 PM",
-            LastModifiedDate: "1/27/2022 15:51:52 PM",
-          },
-        ],
-        updated: [],
-        deleted: [],
-      } */
-      companyapp: {
-        created: [
-          {
-            id: "1",
-            Active: 1,
-            Name: "CompanyConId1Test",
-          },
-        ],
-        updated: [],
-        deleted: [],
-      },
-      siteuserapp: {
-        created: [
-          {
-            id: '2',
-            Has_accepted_terms: 1,
-            Cadastro_pela_primeira_vez: 0,
-            Active: 1,
-            Name: 'Franco',
-            Email: 'franco.mendoza@recursiva.com.ar',
-            Password: '123456',
-            Company_Id: '1',
-          },
-        ],
-        updated: [],
-        deleted: [],
-      },
-      /* notes: {
-        created: [],
-        updated: [
-          { id: 'tttt', name: 'Buy eggs' },
-        ],
-        deleted: [],
-      } */
-    };
+    let { from, to} = req?.params;
+    from =parseInt(from);
+    to =parseInt(to);
 
-    const changesParaMyNotes = {
-      noteapp: {
-        created: [
-          {
-            id: '1',
-            Active: 1,
-            Note: '[{"type":"text","content":"This is a comment"}]',
-            SiteUser_Id: "3",
-            FieldMap_Id: "2",
-            CreatedDate: "4/22/2021 11:51:52 PM",
-          },
-        ],
-        updated: [],
-        deleted: [],
-      },
-      fieldmapapp: {
-        created: [
-          {
-            id: "2",
-            Active: 1,
-            QRCode: "20",
-            Range: 1, // use
-            Row: 2,// use
-            Sequence: 2,
-            PlotLocation_Id: "1", //Cambiar
-            Variety_Id: "9",
-            rep: null, // use
-            Test: "T1",
-            CreatedDate: null,
-            LastModiciedDate: "2021-04-16 22:53:40"
-          },
-        ],
-        updated: [],
-        deleted: [],
-      },
-      notexrangexrating: {
-        created: [
-          { id: "1", Note_Id: "1", RangeXRating_Id: "1", Value: "N/A" },
-          { id: "2", Note_Id: "1", RangeXRating_Id: "5", Value: "N/A" }
-        ],
-        updated: [],
-        deleted: [],
-      },
-      rangexrating: {
-        created: [
-          { id: "1", Range_Id: "1", Default: null, CropCRating_Id: "1" },
-          { id: "5", Range_Id: "1", Default: null, CropCRating_Id: "3" }
-        ],
-        updated: [],
-        deleted: [],
-      },
-      cropxratingapp: {
-        created: [
-          { id:"1", Crop_Id: "1", Rating_Id: "1" },
-          { id:"3", Crop_Id: "1", Rating_Id: "6" },
-        ],
-        updated: [],
-        deleted: [],
-      },
-      cropapp: {
-        created: [
-          {id: "1", Name: "Soybean"},
-          {id: "2", Name: "Corn"},
-        ],
-        updated: [],
-        deleted: [],
-      },
-      ratingapp: {
-        created: [
-          {id: "1", Name: "Eye Appeal", isOneScore: 0},
-          {id: "6", Name: "Plant Stand", isOneScore: 0},
-        ],
-        updated: [],
-        deleted: [],
-      },
-    }
-
-    const addVatiety = {
-      varietyapp: {
-        created: [
-          {
-            id: '9',
-            Active: 1,
-            Tecnology: 'Conventional',
-            Brand: 'GDM',
-            Name: 'GDM21CO2',
-            Launch_Season: '2022',
-            Company_Id: '1',
-          },
-        ],
-        updated: [],
-        deleted: [],
-      },
+    const recordsToSend = [];
+    console.log('From:', from, " to:", to)
+    for (let a = from; a < to; a++) {
+      recordsToSend.push({
+        id: a.toString(),
+        Flower_Color: 'P',
+        Pubescense: 'pub',
+        Pubescense_Color: 'LT',
+        Pod_Color: 'T',
+        Hilum_Color: 'BL',
+        Plant_Height: '40',
+        Standability: '1.5',
+        Salt_Tolerance: '2.5',
+        Seed_Size: '1',
+        Emergence: '5',
+        Green_Stem: '2',
+        Shattering: 'S',
+        Sudden_Death_Syndrome: '6',
+        Growth_habit: '1.5',
+        Stem_Canker: '1',
+        Root_Knot_Nematode: '2',
+        Relative_Maturity: '3',
+        Frogeye: '4',
+        RPS_Gene: '1.5',
+        PRR_Tolerance: '2.5',
+        Iron_Deficiency_Chlorosis: '5',
+        SCN_Source: '3',
+        SCN_Rating: '0.5',
+        White_Mold: '1',
+        Brown_Stem_Rot: '3',
+        STS: '4',
+        Cercospora: '4.5',
+        Stress_Tolerance: '3.5',
+      });
     }
     
+    const multipleSend = {
+      sojavariety: {
+      created: recordsToSend,
+      updated: [],
+      deleted: [],
+    }
+  };
 
     res.send({
-      changes: addVatiety, 
-      timestamp: 1644413040,
+      changes: multipleSend, 
+      timestamp: 1644512853,
       ok: true,
     });
   });
