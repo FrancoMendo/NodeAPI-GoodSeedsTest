@@ -1,4 +1,5 @@
 var path = require('path');
+//const { sleep } = require('./helper/general');
 
 module.exports = function(app){
   app.post("/sync", (req, res) => {
@@ -88,5 +89,16 @@ module.exports = function(app){
         console.log("Sent:", fileName);
       }
     });
+  });
+
+  app.get("/test",async (req, res) => {
+    const timeToSendResponse = 3600;
+    console.log(`Wait ${timeToSendResponse} ms...`)
+    const sleep = (ms) => {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    await sleep(timeToSendResponse)
+    console.log("Send response");
+    res.status(200).send({test: true, success: true})
   });
 }
