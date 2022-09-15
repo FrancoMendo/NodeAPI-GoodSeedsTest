@@ -92,7 +92,7 @@ module.exports = function(app){
   });
 
   app.get("/test",async (req, res) => {
-    const timeToSendResponse = 3600;
+    const timeToSendResponse = 10000;
     console.log(`Wait ${timeToSendResponse} ms...`)
     const sleep = (ms) => {
       return new Promise(resolve => setTimeout(resolve, ms));
