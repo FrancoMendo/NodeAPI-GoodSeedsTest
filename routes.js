@@ -91,8 +91,10 @@ module.exports = function(app){
     });
   });
 
-  app.get("/test",async (req, res) => {
-    const timeToSendResponse = 10000;
+  app.get("/sleep",async (req, res) => {
+    // /sleep?time=numberInString
+    const timeToSendResponse = req.query.time || 10000;
+    console.log('req:', req.query.time)
     console.log(`Wait ${timeToSendResponse} ms...`)
     const sleep = (ms) => {
       return new Promise(resolve => setTimeout(resolve, ms));
